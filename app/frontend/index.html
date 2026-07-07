@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CastGraph — creator matching that reasons over your customers</title>
+<style>
+  :root{
+    --bg:#0a0b0f; --bg2:#0e1017; --panel:#12141c; --panel2:#161925;
+    --line:#232838; --muted:#8b93a7; --text:#eef1f7;
+    --matcha:#7ee787; --matcha2:#3fb950; --violet:#a371f7; --violet2:#7c5cff;
+    --gold:#e3b341; --danger:#f0883e;
+    --shadow:0 20px 60px -20px rgba(0,0,0,.7);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 700px at 78% -8%, rgba(124,92,255,.16), transparent 60%),
+      radial-gradient(900px 600px at 8% 110%, rgba(63,185,80,.10), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh; -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:26px 22px 80px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:38px;height:38px;border-radius:11px;position:relative;
+    background:linear-gradient(135deg,var(--matcha2),var(--violet2));box-shadow:0 6px 22px -6px var(--violet2)}
+  .logo::before,.logo::after{content:"";position:absolute;border-radius:50%;background:#0a0b0f}
+  .logo::before{width:8px;height:8px;top:9px;left:9px;box-shadow:16px 0 0 #0a0b0f,8px 14px 0 #0a0b0f}
+  .logo::after{width:22px;height:2px;top:13px;left:9px;background:rgba(10,11,15,.6);transform:rotate(30deg)}
+  .brand h1{font-size:20px;margin:0;letter-spacing:-.3px;font-weight:700}
+  .brand .sub{color:var(--muted);font-size:12.5px;margin-top:1px}
+  .stack{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .chip{font-size:11.5px;color:var(--muted);border:1px solid var(--line);padding:5px 10px;border-radius:999px;background:var(--panel);white-space:nowrap}
+  .chip .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--matcha2);margin-right:6px;vertical-align:middle;box-shadow:0 0 8px var(--matcha2)}
+  .chip.rr .dot{background:var(--violet)}
+  .chip.bb .dot{background:var(--gold)}
+
+  .hero{margin:6px 0 22px}
+  .hero h2{font-size:26px;line-height:1.25;margin:0 0 6px;letter-spacing:-.5px;font-weight:750;max-width:760px}
+  .hero h2 em{font-style:normal;background:linear-gradient(120deg,var(--matcha),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--muted);margin:0;max-width:640px}
+
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:start}
+  @media(max-width:880px){.grid{grid-template-columns:1fr}}
+
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+  .panel{padding:20px}
+  .panel h3{margin:0 0 3px;font-size:13px;text-transform:uppercase;letter-spacing:.10em;color:var(--muted)}
+  label{display:block;font-size:12.5px;color:var(--muted);margin:16px 0 6px;font-weight:600}
+  textarea,input{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px 12px;font:inherit;font-size:14px;resize:vertical}
+  textarea:focus,input:focus{outline:none;border-color:var(--violet2);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+  .btn{margin-top:18px;width:100%;border:0;border-radius:11px;padding:13px 16px;font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;
+    background:linear-gradient(135deg,var(--matcha2),var(--violet2));color:#07120b;box-shadow:0 10px 30px -10px var(--violet2);transition:transform .12s ease, filter .12s}
+  .btn:hover{filter:brightness(1.06)}
+  .btn:active{transform:translateY(1px)}
+  .btn[disabled]{opacity:.6;cursor:progress}
+  .hint{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.45}
+  .vs{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)}
+  .vs b{color:var(--text)}
+
+  .results{min-height:200px;display:flex;flex-direction:column;gap:16px}
+  .placeholder{border:1px dashed var(--line);border-radius:16px;padding:44px 22px;text-align:center;color:var(--muted)}
+  .placeholder .big{font-size:15px;color:var(--text);margin-bottom:6px;font-weight:600}
+
+  .creator{padding:18px 18px 16px;position:relative;overflow:hidden;animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
+  .creator:nth-child(2){animation-delay:.08s}.creator:nth-child(3){animation-delay:.16s}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .crow{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .who{display:flex;gap:13px;align-items:center}
+  .rank{width:30px;height:30px;flex:none;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:14px;color:#07120b;background:linear-gradient(135deg,var(--matcha),var(--matcha2))}
+  .creator:nth-child(2) .rank{background:linear-gradient(135deg,#cfe8ff,#7aa2ff)}
+  .creator:nth-child(3) .rank{background:linear-gradient(135deg,#e7d7ff,#a371f7)}
+  .handle{font-weight:700;font-size:17px;letter-spacing:-.2px}
+  .meta{color:var(--muted);font-size:12.5px;margin-top:2px}
+  .plat{display:inline-block;font-size:10.5px;padding:2px 7px;border:1px solid var(--line);border-radius:6px;color:var(--muted);margin-left:2px}
+  .score{text-align:right;flex:none}
+  .score .n{font-size:26px;font-weight:800;line-height:1;background:linear-gradient(120deg,var(--matcha),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .score .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+
+  .path{margin:15px 0 6px;padding:13px 12px;background:radial-gradient(140% 140% at 0% 0%, rgba(124,92,255,.07), transparent 60%),var(--bg2);border:1px solid var(--line);border-radius:12px}
+  .chain{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+  .node{font-size:12.5px;padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);white-space:nowrap;animation:pop .4s both}
+  .node.creator-n{border-color:rgba(126,231,135,.5);color:#c9f7cf}
+  .node.audience-n{color:#dfe5f3}
+  .node.customer-n{border-color:rgba(163,113,247,.6);background:rgba(124,92,255,.12);color:#e8ddff;font-weight:600}
+  .edge{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+  .edge .ln{width:20px;height:1px;background:linear-gradient(90deg,var(--violet2),transparent);position:relative}
+  .edge.ov{color:var(--matcha);font-weight:700}
+  .edge.ov .ln{background:linear-gradient(90deg,var(--matcha2),var(--matcha))}
+  @keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+  .perf{margin-top:9px;font-size:12px;color:var(--muted)}
+  .perf b{color:var(--matcha);font-weight:700}
+  .why{margin:12px 2px 2px;font-size:13.5px;line-height:1.5;color:#d7dbe6}
+  .why::before{content:"“";color:var(--violet);font-size:18px;font-weight:700;margin-right:2px}
+
+  .act{display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:12px}
+  .book{border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;color:#07120b;
+    background:linear-gradient(135deg,var(--matcha),var(--matcha2));transition:transform .12s, filter .12s}
+  .book:hover{filter:brightness(1.06)}.book:active{transform:translateY(1px)}
+  .book.done{background:var(--panel2);color:var(--matcha);border:1px solid var(--matcha2);cursor:default}
+  .followers-note{font-size:11.5px;color:var(--muted)}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(30px);opacity:0;pointer-events:none;
+    background:linear-gradient(135deg,#0f1a12,#12141c);border:1px solid var(--matcha2);color:var(--text);
+    padding:13px 18px;border-radius:12px;box-shadow:var(--shadow);transition:all .35s cubic-bezier(.2,.7,.2,1);font-weight:600;font-size:14px;z-index:50}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast .k{color:var(--matcha);margin-right:7px}
+
+  .foot{margin-top:30px;color:var(--muted);font-size:12px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line);padding-top:16px}
+  .spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.25);border-top-color:#07120b;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:8px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .err{color:var(--danger);font-size:13px;padding:12px;border:1px solid rgba(240,136,62,.4);border-radius:10px;background:rgba(240,136,62,.08)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>CastGraph</h1>
+        <div class="sub">creator matching that reasons over your customers</div>
+      </div>
+    </div>
+    <div class="stack">
+      <span class="chip" id="chip-auth"><span class="dot" style="background:#8b93a7;box-shadow:none"></span>signing in…</span>
+      <span class="chip" id="chip-neo"><span class="dot"></span>Neo4j graph</span>
+      <span class="chip rr" id="chip-rr"><span class="dot"></span>RocketRide Cloud</span>
+      <span class="chip bb"><span class="dot"></span>Butterbase</span>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h2>Stop ranking creators by follower count. Find the ones whose audience <em>is</em> your customer.</h2>
+    <p>Paste who your buyers are and what you're launching. CastGraph walks a live audience-overlap graph and returns the creators whose followers overlap your real customers — with the exact path that proves it.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card panel" style="position:sticky;top:18px">
+      <h3>The brief</h3>
+      <label for="prof">Your customers</label>
+      <textarea id="prof" rows="3">matcha-curious Gen-Z women, CA + NY, wellness + aesthetics</textarea>
+      <label for="prod">Your launch</label>
+      <input id="prod" value="matcha drink launch" />
+      <label for="plat">Platforms</label>
+      <input id="plat" value="TikTok + Instagram" />
+      <button class="btn" id="go">Find creators</button>
+      <div class="vs"><b>What you do today:</b> open a marketplace, get 100 profiles sorted by followers, guess, spend $3k, miss. <b>CastGraph asks a different question.</b></div>
+      <div class="hint" id="hint"></div>
+    </div>
+
+    <div class="results" id="results">
+      <div class="placeholder">
+        <div class="big">Your matched creators will appear here</div>
+        <div>Each with a visual why-path back to your own customers — not a follower ranking.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span id="foot-status">Ready.</span>
+    <span>·</span>
+    <span>Match = live Neo4j traversal on a RocketRide Cloud pipeline</span>
+    <span>·</span>
+    <span>Auth, briefs, bookings & payment on Butterbase</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = "https://api.butterbase.ai/v1/app_602k31s1goyl";
+  const $ = (s)=>document.querySelector(s);
+  let lastBriefId = null;
+  let session = null;
+
+  function authHeaders(){
+    const h = {"Content-Type":"application/json"};
+    if(session && session.access_token) h["Authorization"] = "Bearer " + session.access_token;
+    return h;
+  }
+  async function signIn(){
+    try{
+      const r = await fetch(`${API}/fn/demo_session`,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
+      const d = await r.json();
+      if(!d.access_token) throw new Error("no token");
+      session = d;
+      $("#chip-auth").innerHTML = `<span class="dot"></span>${d.user&&d.user.display_name?d.user.display_name:"Signed in"}`;
+    }catch(e){ $("#chip-auth").innerHTML = `<span class="dot" style="background:#f0883e"></span>guest`; }
+  }
+
+  function esc(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+  function fmtFollowers(n){return n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?Math.round(n/1e3)+"K":n;}
+
+  function toast(html){const t=$("#toast");t.innerHTML=html;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),4200);}
+
+  function chain(path){
+    return path.map((p,i)=>{
+      const isEdge = p.type==="edge";
+      if(isEdge){
+        const ov = /overlap/i.test(p.label);
+        return `<span class="edge ${ov?'ov':''}"><span class="ln"></span>${esc(p.label)}<span class="ln"></span></span>`;
+      }
+      const cls = p.type==="creator"?"creator-n":p.type==="customer"?"customer-n":"audience-n";
+      return `<span class="node ${cls}" style="animation-delay:${i*60}ms">${esc(p.label)}</span>`;
+    }).join("");
+  }
+
+  function creatorCard(c,i){
+    const perf = c.brand ? `<div class="perf">ran <b>${esc(c.campaign)}</b> → <b>+${c.lift}%</b> for ${esc(c.brand)}</div>` : "";
+    const note = i===0 ? `<span class="followers-note"> · not the biggest — that's the point</span>` : "";
+    return `<div class="card creator">
+      <div class="crow">
+        <div class="who">
+          <div class="rank">${i+1}</div>
+          <div>
+            <div class="handle">${esc(c.creator)}</div>
+            <div class="meta">${fmtFollowers(c.followers)} followers<span class="plat">${esc(c.platform)}</span>${note}</div>
+          </div>
+        </div>
+        <div class="score"><div class="n">${c.score}</div><div class="l">match score</div></div>
+      </div>
+      <div class="path"><div class="chain">${chain(c.path)}</div>${perf}</div>
+      <div class="why" data-idx="${i}">${esc(c.why)}</div>
+      <div class="act">
+        <span class="followers-note">${c.overlapPct}% audience overlap with your customers</span>
+        <button class="book" data-h="${esc(c.creator)}" data-w="${esc(c.creator+' → '+ (c.path[2]?c.path[2].label:'') +' — '+c.overlapPct+'% overlaps your customers')}">Book — $850</button>
+      </div>
+    </div>`;
+  }
+
+  async function find(){
+    const go=$("#go"); go.disabled=true; go.innerHTML='<span class="spin"></span>Walking the graph…';
+    $("#foot-status").textContent="Querying RocketRide Cloud → Neo4j…";
+    $("#results").innerHTML='<div class="placeholder"><div class="big">Walking the audience-overlap graph…</div><div>Community detection + overlap-path scoring across creators, audiences and your customers.</div></div>';
+    try{
+      const r = await fetch(`${API}/fn/find_creators`,{method:"POST",headers:authHeaders(),
+        body:JSON.stringify({product:$("#prod").value,customer_profile:$("#prof").value,platforms:$("#plat").value,segment_id:"CS_Hero"})});
+      const d = await r.json();
+      if(d.error) throw new Error(d.error);
+      lastBriefId = d.brief_id;
+      $("#results").innerHTML = d.creators.map(creatorCard).join("");
+      document.querySelectorAll(".book").forEach(b=>b.addEventListener("click",()=>book(b)));
+      explainMatches(d.creators, $("#prod").value);
+      const live = d.source==="rocketride";
+      $("#chip-rr").innerHTML = `<span class="dot"></span>RocketRide Cloud${live?" · live":""}`;
+      $("#foot-status").innerHTML = `Matched ${d.creators.length} creators · ${live?"live Neo4j traversal via RocketRide Cloud":"graph engine"} · brief saved`;
+      $("#hint").innerHTML = "These aren't sorted by followers — they're ranked by how much their audience overlaps <b>your</b> customers, proven by the path.";
+    }catch(e){
+      $("#results").innerHTML = `<div class="err">Couldn't reach the match pipeline: ${esc(e.message)}</div>`;
+      $("#foot-status").textContent="Error.";
+    }finally{ go.disabled=false; go.textContent="Find creators"; }
+  }
+
+  async function explainMatches(creators, product){
+    try{
+      const r = await fetch(`${API}/fn/explain_matches`,{method:"POST",headers:authHeaders(),
+        body:JSON.stringify({creators,brief:product})});
+      const d = await r.json();
+      if(d.whys && d.whys.length){
+        document.querySelectorAll(".why").forEach((el)=>{
+          const i = +el.dataset.idx;
+          if(d.whys[i] && d.whys[i]!==el.textContent){
+            el.style.transition="opacity .25s"; el.style.opacity=".35";
+            setTimeout(()=>{ el.textContent=d.whys[i]; el.style.opacity="1"; },160);
+          }
+        });
+        $("#foot-status").innerHTML = $("#foot-status").innerHTML + " · explanations by Butterbase AI";
+      }
+    }catch(_){}
+  }
+
+  async function book(btn){
+    const handle=btn.dataset.h; btn.disabled=true; btn.innerHTML='<span class="spin"></span>Booking…';
+    try{
+      const r=await fetch(`${API}/fn/book_creator`,{method:"POST",headers:authHeaders(),
+        body:JSON.stringify({brief_id:lastBriefId,creator_handle:handle,amount_cents:85000,why_path:btn.dataset.w})});
+      const d=await r.json();
+      if(d.error) throw new Error(d.error);
+      if(d.checkout_url){ window.location.href=d.checkout_url; return; }
+      btn.className="book done"; btn.textContent="✓ Booked · $850 held";
+      toast(`<span class="k">✓ Booked</span>${esc(handle)} — $850 held · payment recorded on Butterbase`);
+      $("#foot-status").innerHTML=`Booking confirmed · ${esc(d.payment_ref||"")}`;
+    }catch(e){ btn.disabled=false; btn.textContent="Book — $850"; toast(`<span class="k" style="color:#f0883e">Payment error</span>${esc(e.message)}`); }
+  }
+
+  $("#go").addEventListener("click",find);
+  signIn();
+</script>
+</body>
+</html>

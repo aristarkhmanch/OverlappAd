@@ -1,0 +1,21 @@
+# secrets — NEVER commit
+.env
+.env.local
+.env.*
+*.pem
+*.key
+
+# private ideation / personal / organizer docs — never publish
+_private/
+
+# os / editor
+.DS_Store
+*.swp
+.vscode/
+
+# deps / build
+node_modules/
+dist/
+build/
+.cache/
+.gstack/

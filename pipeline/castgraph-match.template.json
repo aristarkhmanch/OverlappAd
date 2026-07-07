@@ -1,0 +1,38 @@
+{
+  "name": "castgraph_match",
+  "project_id": "castgraph_match",
+  "source": "in",
+  "components": [
+    { "id": "in", "provider": "webhook", "config": {} },
+
+    { "id": "agent", "provider": "agent_rocketride",
+      "config": { "agent_description": "CastGraph match agent", "instructions": ["Use the http tool to query the graph."], "max_waves": 1 },
+      "input": [ { "lane": "questions", "from": "in" } ] },
+
+    { "id": "llm", "provider": "llm_openai",
+      "config": { "profile": "openai-4o-mini", "openai-4o-mini": { "apikey": "sk-not-invoked-direct-tool-call-only", "modelSource": "" } },
+      "control": [ { "classType": "llm", "from": "agent" } ] },
+
+    { "id": "mem", "provider": "memory_internal",
+      "config": { "type": "memory_internal" },
+      "control": [ { "classType": "memory", "from": "agent" } ] },
+
+    { "id": "http", "provider": "tool_http_request",
+      "config": { "type": "tool_http_request", "serverName": "http",
+        "allowGET": true, "allowPOST": true, "allowPUT": true, "allowPATCH": true,
+        "allowDELETE": true, "allowHEAD": false, "allowOPTIONS": false,
+        "rateLimitPerSecond": 10, "rateLimitPerMinute": 100, "maxConcurrentRequests": 5,
+        "urlWhitelist": [] },
+      "control": [ { "classType": "tool", "from": "agent" } ] },
+
+    { "id": "neo", "provider": "db_neo4j",
+      "config": { "profile": "default", "default": {
+        "uri": "neo4j+s://22ad19fc.databases.neo4j.io",
+        "auth_method": "userpass",
+        "user": "22ad19fc",
+        "password": "${NEO4J_PASSWORD}",
+        "database": "22ad19fc",
+        "allow_execute": true } },
+      "control": [ { "classType": "tool", "from": "agent" } ] }
+  ]
+}

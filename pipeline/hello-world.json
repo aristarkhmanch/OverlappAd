@@ -1,0 +1,14 @@
+{
+  "name": "helloworld_probe_2",
+  "project_id": "helloworld_probe_2",
+  "source": "in",
+  "components": [
+    { "id": "in", "provider": "webhook", "config": {} },
+    {
+      "id": "out",
+      "provider": "response_text",
+      "config": { "laneName": "text" },
+      "input": [ { "lane": "text", "from": "in" } ]
+    }
+  ]
+}
