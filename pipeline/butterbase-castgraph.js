@@ -1,4 +1,4 @@
-// CastGraph — get the 3 winning creators from the deployed RocketRide pipeline.
+// OverlappAd — get the 3 winning creators from the deployed RocketRide pipeline.
 //
 // RocketRide runs raw Cypher through a `tool_http_request` node that hits Neo4j
 // Aura's HTTP Query API. Tool invocation is only available over RocketRide's
@@ -36,7 +36,7 @@ function pipelineConfig(neo4jPassword) {
     components: [
       { id: "in", provider: "webhook", config: {} },
       { id: "agent", provider: "agent_rocketride",
-        config: { agent_description: "CastGraph match agent", instructions: ["Use the http tool."], max_waves: 1 },
+        config: { agent_description: "OverlappAd match agent", instructions: ["Use the http tool."], max_waves: 1 },
         input: [{ lane: "questions", from: "in" }] },
       { id: "llm", provider: "llm_openai",
         config: { profile: "openai-4o-mini", "openai-4o-mini": { apikey: "sk-not-invoked", modelSource: "" } },
@@ -83,7 +83,7 @@ async function openDap(env) {
   return { ws, call };
 }
 
-export async function getCastGraphWinners(env) {
+export async function getOverlappAdWinners(env) {
   const { ws, call } = await openDap(env);
   try {
     // 1) authenticate

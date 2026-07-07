@@ -1,4 +1,4 @@
-// CastGraph — book_creator
+// OverlappAd — book_creator
 // Records a booking on the Butterbase backend (database in active use) and settles
 // payment. Payment is provider-agnostic: today it runs a self-contained checkout that
 // marks the order paid; swapping in real Stripe test Checkout is a localized change in
@@ -15,7 +15,7 @@ async function settlePayment(ctx, { creatorHandle, amountCents, currency }) {
     params.append("line_items[0][quantity]", "1");
     params.append("line_items[0][price_data][currency]", currency);
     params.append("line_items[0][price_data][unit_amount]", String(amountCents));
-    params.append("line_items[0][price_data][product_data][name]", `CastGraph booking — ${creatorHandle}`);
+    params.append("line_items[0][price_data][product_data][name]", `OverlappAd booking — ${creatorHandle}`);
     const r = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
       headers: { Authorization: `Bearer ${sk}`, "Content-Type": "application/x-www-form-urlencoded" },

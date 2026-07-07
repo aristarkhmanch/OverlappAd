@@ -1,4 +1,4 @@
-// CastGraph — demo_session
+// OverlappAd — demo_session
 // Mints a real end-user session (Butterbase auth) for the demo brand account so the
 // frontend can sign in with one tap. Credentials live in encrypted function env vars,
 // never in the shipped frontend or the public repo. This is what puts Butterbase auth

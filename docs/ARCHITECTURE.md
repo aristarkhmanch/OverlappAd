@@ -1,4 +1,4 @@
-# CastGraph — Architecture & Integration
+# OverlappAd — Architecture & Integration
 
 This document details the problem, the Neo4j graph model, and exactly how Butterbase, Neo4j, and
 RocketRide Cloud are woven into the core product — for the HackwithBay 3.0 judging criteria (*"how
@@ -8,7 +8,7 @@ meaningfully all three mandatory technologies are woven into the core product ex
 
 DTC food-&-beverage marketers pick creators from flat marketplaces sorted by follower count. That
 metric doesn't answer the only question that matters: **is this creator's audience actually my
-customer?** So they guess and waste budget. CastGraph reframes creator selection as a **graph
+customer?** So they guess and waste budget. OverlappAd reframes creator selection as a **graph
 reasoning problem** over the relationships between creators, their audiences, and the brand's own
 customers.
 

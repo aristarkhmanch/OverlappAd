@@ -1,4 +1,4 @@
-# CastGraph 🕸️
+# OverlappAd 🕸️
 
 **Creator matching that reasons over your customers — not follower counts.**
 
@@ -6,7 +6,7 @@ Live demo → **https://castgraph.butterbase.dev**
 
 > When you launch a product, you open a creator marketplace and get hundreds of profiles ranked by
 > follower count — but you can't see which creators' audiences are *actually your customers*, so you
-> guess and burn budget. **CastGraph** models creators, their audiences, and your customers as one
+> guess and burn budget. **OverlappAd** models creators, their audiences, and your customers as one
 > graph, finds the creators whose followers overlap your real buyers, shows you the exact path that
 > proves it, and books them — all in one flow.
 
@@ -20,7 +20,7 @@ DTC food-&-beverage brand marketers sift 50–100 creator profiles per brief ran
 vanity metrics, and still misfire — a bad match wastes ~$2–5k and weeks, because *"does this creator's
 audience overlap my actual buyers?"* is invisible in a flat directory like Fiverr.
 
-CastGraph asks the one question a flat directory can't: **whose followers *are* my customers?**
+OverlappAd asks the one question a flat directory can't: **whose followers *are* my customers?**
 
 ## What it does (the demo)
 
@@ -135,4 +135,4 @@ Neo4j AuraDB · RocketRide Cloud · Butterbase (auth, Postgres, functions, AI ga
 
 ---
 
-*HackwithBay 3.0 · CastGraph · a reasoning engine over who actually reaches your customers.*
+*HackwithBay 3.0 · OverlappAd · a reasoning engine over who actually reaches your customers.*

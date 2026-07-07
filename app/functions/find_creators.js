@@ -1,4 +1,4 @@
-// CastGraph — find_creators
+// OverlappAd — find_creators
 // Flow: brief in -> RocketRide Cloud pipeline (Neo4j audience-overlap graph traversal)
 //       -> enrich each match with a one-sentence "why" via Butterbase AI gateway
 //       -> persist the brief -> return ranked creators + visual why-path.
@@ -86,7 +86,7 @@ function pipelineConfig(neo4jPassword) {
   return { name: "castgraph_match", project_id: "castgraph_match", source: "in", components: [
     { id: "in", provider: "webhook", config: {} },
     { id: "agent", provider: "agent_rocketride",
-      config: { agent_description: "CastGraph match agent", instructions: ["Use the http tool."], max_waves: 1 },
+      config: { agent_description: "OverlappAd match agent", instructions: ["Use the http tool."], max_waves: 1 },
       input: [{ lane: "questions", from: "in" }] },
     { id: "llm", provider: "llm_openai",
       config: { profile: "openai-4o-mini", "openai-4o-mini": { apikey: "sk-not-invoked", modelSource: "" } },

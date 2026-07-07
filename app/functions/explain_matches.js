@@ -1,4 +1,4 @@
-// CastGraph — explain_matches
+// OverlappAd — explain_matches
 // Progressive enhancement: turns the structured graph paths into punchy, grounded
 // one-liners via the Butterbase AI gateway. The UI calls this AFTER the match cards
 // render, so the wow is never gated on model latency, yet Butterbase AI stays
