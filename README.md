@@ -1,4 +1,4 @@
-# OverlappAd 🕸️
+# OverlappAd 
 
 **Creator matching that reasons over your customers — not follower counts.**
 
