@@ -36,7 +36,7 @@ decoys (`@flavorbomb_eats` 1.4M, `@pixelplays` 1.65M) are correctly buried.
 
 ---
 
-## How the three mandatory sponsors are load-bearing
+## Here are the sponsors
 
 Every recommendation you see is produced by all three, in the live request path:
 
