@@ -10,7 +10,7 @@ async function settlePayment(ctx, { creatorHandle, amountCents, currency }) {
   if (sk) {
     const params = new URLSearchParams();
     params.append("mode", "payment");
-    params.append("success_url", (ctx.env.APP_URL || "https://castgraph.butterbase.dev") + "/?booked=1");
+    params.append("success_url", (ctx.env.APP_URL || "https://castgraph.butterbase.dev") + "/?paid={CHECKOUT_SESSION_ID}");
     params.append("cancel_url", (ctx.env.APP_URL || "https://castgraph.butterbase.dev") + "/?canceled=1");
     params.append("line_items[0][quantity]", "1");
     params.append("line_items[0][price_data][currency]", currency);

@@ -294,7 +294,12 @@
     }catch(e){ btn.disabled=false; btn.textContent="Book · $850"; toast(`<span class="k" style="color:#b4530f">Payment error</span>${esc(e.message)}`); }
   }
 
-  if(location.search.indexOf("booked=1")>=0){ toast(`<span class="k">✓ Payment complete</span>Booking confirmed via Stripe test checkout`); history.replaceState({},"",location.pathname); }
+  (async()=>{ const m=location.search.match(/[?&]paid=(cs_[^&]+)/); if(!m) return;
+    try{ const r=await fetch(`${API}/fn/confirm_payment`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({session_id:decodeURIComponent(m[1])})}); const d=await r.json();
+      if(d.paid) toast(`<span class="k">✓ Payment complete</span>${esc(d.creator_handle||'Creator')} booked — $${((d.amount_cents||85000)/100).toFixed(0)} paid via Stripe test checkout`);
+      else toast(`<span class="k" style="color:#b4530f">Payment not completed</span>no charge captured`);
+    }catch(_){} history.replaceState({},"",location.pathname);
+  })();
   $("#go").addEventListener("click",find);
   signIn();
 </script>
