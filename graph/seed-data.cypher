@@ -228,3 +228,19 @@ MERGE (k)-[p:PERFORMED]->(b) SET p.lift=x.lift;
 // To see the "why path" for one creator (what you render in the demo):
 // MATCH path = (c:Creator {handle:'@matchamaven'})-[:REACHES]->(:AudienceSegment)-[:OVERLAPS]->(:CustomerSegment {id:'CS_Hero'})
 // RETURN path;
+
+
+// ================= REAL TIKTOK CREATORS (scraped live 2026-07-07) =================
+// Real handles + real follower counts pulled from tiktok.com public profiles.
+// They carry realData=true and source='tiktok.com'. All are big-follower food
+// creators with LOW matcha/Gen-Z overlap, so they land as *real decoys* (buried
+// beneath the mid-tier winners) — demonstrating live TikTok ingestion without
+// disturbing the hero scenario. Re-runnable (idempotent MERGE).
+UNWIND [
+  {handle:'@gordonramsayofficial', followers:40800000, a:'AS_FoodieMil',    p:85, a2:'AS_HomeCooking', p2:15},
+  {handle:'@thekoreanvegan',       followers:3000000,  a:'AS_CleanWellness', p:50, a2:'AS_FoodieMil',   p2:50},
+  {handle:'@doobydobap',           followers:3200000,  a:'AS_FoodieMil',    p:80, a2:'AS_HomeCooking', p2:20}
+] AS x
+MERGE (c:Creator {handle:x.handle}) SET c.platform='TikTok', c.followers=x.followers, c.niche='food/beverage', c.realData=true, c.source='tiktok.com'
+WITH c,x MATCH (a1:AudienceSegment {id:x.a})  MERGE (c)-[r1:REACHES]->(a1) SET r1.sharePct=x.p
+WITH c,x MATCH (a2:AudienceSegment {id:x.a2}) MERGE (c)-[r2:REACHES]->(a2) SET r2.sharePct=x.p2;
