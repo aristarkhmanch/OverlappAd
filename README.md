@@ -1,6 +1,6 @@
 # OverlappAd 
 
-**Creator matching that reasons over your customers — not follower counts.**
+**Creator matching that reasons over your customers not follower counts.**
 
 Live demo → **https://castgraph.butterbase.dev**
 
